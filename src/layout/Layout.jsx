@@ -3,6 +3,7 @@ import Gallery from "../section/gallery/Gallery"
 import Header from "../section/header/Header"
 import { useEffect } from "react";
 import axios from "axios";
+// import Search from "../section/header/Search";
 
 //  update samthing
 function Loading() {
@@ -16,6 +17,11 @@ function Loading() {
 function Layout() {
 
     let [data, setData] = useState([]);
+    // let SearchHandler = (text) => {
+    //   console.log(text);
+      
+    // }
+    let [SearchText, setSearchText] = useState(' ');
 
     useEffect(() => {
         async function getData() {
@@ -39,17 +45,26 @@ function Layout() {
       setData(updateData);
     }
 
+    // let SearchHandler = (text) => {
+    //   setSearchText(text);
+      
+    // }
+
   return (
     <div className="w-full pb-8 min-h-screen bg-slate-300 pt-6">
       <div className="max-w-6xl m-auto pt-6 bg-white p-5 rounded shadow ">
-        <Header onAscending={ascendingHandler} onDescending={descendingHandler} />
+        <Header onSearch={(text) => setSearchText(text)} onAscending={ascendingHandler} onDescending={descendingHandler} />
 
         {
             data.length == 0 
             ? 
             <Loading />
             : 
-            <Gallery galleryItemsData={data} />
+            <Gallery galleryItemsData={
+              data.filter(item => {
+                return item.name.toLowerCase().includes(SearchText.toLocaleLowerCase())
+              })
+            } />
         }
         
       </div>
